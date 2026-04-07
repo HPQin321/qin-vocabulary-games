@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>英语单词闯关游戏集</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            text-align: center;
+            max-width: 900px;
+        }
+        
+        h1 {
+            color: white;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .subtitle {
+            color: rgba(255,255,255,0.9);
+            font-size: 1.2rem;
+            margin-bottom: 40px;
+        }
+        
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin-top: 20px;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 35px 25px;
+            text-decoration: none;
+            color: #333;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transition: transform 0.3s, box-shadow 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+        }
+        
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+        
+        .card-icon {
+            font-size: 4rem;
+            margin-bottom: 15px;
+        }
+        
+        .card-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .card-desc {
+            color: #666;
+            font-size: 0.95rem;
+        }
+        
+        .card-1::before { background: linear-gradient(90deg, #f093fb, #f5576c); }
+        .card-2::before { background: linear-gradient(90deg, #4facfe, #00f2fe); }
+        .card-3::before { background: linear-gradient(90deg, #43e97b, #38f9d7); }
+        
+        .footer {
+            margin-top: 40px;
+            color: rgba(255,255,255,0.7);
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎮 英语单词闯关游戏集</h1>
+        <p class="subtitle">选择你喜欢的小游戏，开始背单词吧！</p>
+        
+        <div class="cards">
+            <a href="玉桂狗背单词.html" class="card card-1">
+                <div class="card-icon">🐕</div>
+                <div class="card-title">玉桂狗背单词</div>
+                <div class="card-desc">可爱萌宠陪你记单词</div>
+            </a>
+            
+            <a href="三下英语单词闯关.html" class="card card-2">
+                <div class="card-icon">📚</div>
+                <div class="card-title">三下英语单词闯关</div>
+                <div class="card-desc">三年级英语同步练习</div>
+            </a>
+            
+            <a href="刺激单词闯关.html" class="card card-3">
+                <div class="card-icon">⚡</div>
+                <div class="card-title">刺激单词闯关</div>
+                <div class="card-desc">挑战你的词汇量</div>
+            </a>
+        </div>
+        
+        <p class="footer">Made with ❤️ by 秦老师</p>
+    </div>
+</body>
+</html>
