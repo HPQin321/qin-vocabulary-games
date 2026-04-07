@@ -1,0 +1,1043 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>三下单词与短语通关手册 | 三年级英语</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #f59e0b; /* 活泼的橙色 */
+            --primary-dark: #d97706;
+            --secondary: #10b981; /* 清新的绿色 */
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --bg: #fffbeb; /* 暖色背景 */
+            --card-bg: #ffffff;
+            --text: #1e293b;
+            --text-light: #64748b;
+        }
+
+        body {
+            font-family: 'Comic Sans MS', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* 更活泼的字体 */
+            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+            min-height: 100vh;
+            color: var(--text);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* 头部 */
+        .header {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            text-align: center;
+            border: 4px solid var(--primary);
+        }
+
+        .header h1 {
+            color: var(--primary);
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+
+        .header p {
+            color: var(--text-light);
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+
+        /* 进度条 */
+        .progress-section {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+
+        .progress-title {
+            font-size: 1.3em;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: var(--primary);
+        }
+
+        .progress-bar-container {
+            background: #e2e8f0;
+            border-radius: 10px;
+            height: 30px;
+            overflow: hidden;
+            margin-bottom: 10px;
+            border: 2px solid #cbd5e1;
+        }
+
+        .progress-bar {
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            height: 100%;
+            border-radius: 10px;
+            transition: width 0.5s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+        }
+
+        .level-progress {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .level-card {
+            background: var(--bg);
+            padding: 15px;
+            border-radius: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 3px solid transparent;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+
+        .level-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary);
+            background: #fff;
+        }
+
+        .level-card.active {
+            border-color: var(--primary);
+            background: #fff;
+            box-shadow: 0 0 15px rgba(245, 158, 11, 0.3);
+        }
+
+        .level-icon {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .level-name {
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: var(--text);
+        }
+
+        .level-count {
+            color: var(--text-light);
+            font-size: 0.9em;
+        }
+
+        /* 词汇卡片 */
+        .vocab-section {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            display: none;
+        }
+
+        .vocab-section.active {
+            display: block;
+        }
+
+        .section-title {
+            font-size: 1.5em;
+            color: var(--primary);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: bold;
+        }
+
+        .vocab-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 15px;
+        }
+
+        .vocab-card {
+            background: var(--bg);
+            border-radius: 15px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            min-height: 120px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            border: 2px solid #fcd34d;
+        }
+
+        .vocab-card:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+            border-color: var(--primary);
+        }
+
+        .vocab-card.mastered {
+            background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+            border: 2px solid var(--secondary);
+        }
+
+        .vocab-english {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: var(--primary-dark);
+            margin-bottom: 10px;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        .vocab-chinese {
+            color: var(--text-light);
+            font-size: 1.1em;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            font-weight: bold;
+        }
+
+        .vocab-card.show-chinese .vocab-chinese {
+            opacity: 1;
+        }
+
+        .vocab-card.show-chinese .vocab-english {
+            opacity: 0.3;
+        }
+
+        .mastered-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: var(--secondary);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            display: none;
+            font-weight: bold;
+        }
+
+        .vocab-card.mastered .mastered-badge {
+            display: block;
+        }
+
+        /* 控制按钮 */
+        .controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 50px; /* 更圆润的按钮 */
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .btn:active {
+            transform: scale(0.95);
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+        }
+
+        .btn-secondary {
+            background: var(--secondary);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #059669;
+        }
+
+        .btn-warning {
+            background: var(--warning);
+            color: white;
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+
+        /* 自测模式 */
+        .quiz-section {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            display: none;
+        }
+
+        .quiz-section.active {
+            display: block;
+        }
+
+        .quiz-question {
+            font-size: 1.8em;
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 30px;
+            background: var(--bg);
+            border-radius: 15px;
+            color: var(--primary-dark);
+            font-weight: bold;
+            border: 2px dashed var(--primary);
+        }
+
+        .quiz-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .quiz-option {
+            padding: 20px;
+            background: var(--bg);
+            border: 2px solid #fcd34d;
+            border-radius: 15px;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+
+        .quiz-option:hover {
+            border-color: var(--primary);
+            background: #fffbeb;
+            transform: translateY(-2px);
+        }
+
+        .quiz-option.correct {
+            background: #d1fae5;
+            border-color: var(--secondary);
+            color: #065f46;
+        }
+
+        .quiz-option.wrong {
+            background: #fee2e2;
+            border-color: var(--danger);
+            color: #991b1b;
+        }
+
+        /* 最终挑战 */
+        .challenge-section {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            display: none;
+        }
+
+        .challenge-section.active {
+            display: block;
+        }
+
+        .challenge-text {
+            background: var(--bg);
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            line-height: 2;
+            font-size: 1.2em;
+            border: 2px solid var(--primary);
+        }
+
+        .challenge-text .highlight {
+            background: #fef3c7;
+            padding: 2px 8px;
+            border-radius: 5px;
+            font-weight: bold;
+            color: var(--primary-dark);
+            border-bottom: 2px solid var(--primary);
+        }
+
+        .challenge-input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #fcd34d;
+            border-radius: 15px;
+            font-size: 1.1em;
+            margin-bottom: 15px;
+            resize: vertical;
+            min-height: 150px;
+            font-family: inherit;
+        }
+
+        .challenge-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: #fffbeb;
+        }
+
+        /* 统计 */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .stat-card {
+            background: var(--bg);
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            border: 2px solid #fcd34d;
+        }
+
+        .stat-number {
+            font-size: 2.2em;
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        .stat-label {
+            color: var(--text-light);
+            font-size: 0.9em;
+            font-weight: bold;
+        }
+
+        /* 响应式 */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8em;
+            }
+
+            .vocab-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .controls {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        /* 动画 */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease;
+        }
+
+        /* 导航 */
+        .nav-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .nav-tab {
+            padding: 12px 20px;
+            background: var(--card-bg);
+            border: 2px solid #fcd34d;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            color: var(--text);
+        }
+
+        .nav-tab.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .nav-tab:hover:not(.active) {
+            background: #fffbeb;
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 头部 -->
+        <div class="header fade-in">
+            <h1>🎓 三下单词与短语通关手册</h1>
+            <p>Grade 3 Volume 2 Words & Phrases | 快乐学英语</p>
+        </div>
+
+        <!-- 进度区域 -->
+        <div class="progress-section fade-in">
+            <div class="progress-title">📊 学习进度</div>
+            <div class="progress-bar-container">
+                <div class="progress-bar" id="totalProgress">0%</div>
+            </div>
+            <div class="level-progress">
+                <div class="level-card" onclick="showLevel(1)" id="level1">
+                    <div class="level-icon">⏰</div>
+                    <div class="level-name">第 1 关：Unit 1-2</div>
+                    <div class="level-count" id="level1Count">0/0</div>
+                </div>
+                <div class="level-card" onclick="showLevel(2)" id="level2">
+                    <div class="level-icon">📅</div>
+                    <div class="level-name">第 2 关：Unit 3-4</div>
+                    <div class="level-count" id="level2Count">0/0</div>
+                </div>
+                <div class="level-card" onclick="showLevel(3)" id="level3">
+                    <div class="level-icon">🏫</div>
+                    <div class="level-name">第 3 关：Unit 5-6</div>
+                    <div class="level-count" id="level3Count">0/0</div>
+                </div>
+                <div class="level-card" onclick="showLevel(4)" id="level4">
+                    <div class="level-icon">🎒</div>
+                    <div class="level-name">第 4 关：Unit 7-8</div>
+                    <div class="level-count" id="level4Count">0/0</div>
+                </div>
+            </div>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number" id="masteredCount">0</div>
+                    <div class="stat-label">已掌握单词</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="quizScore">0</div>
+                    <div class="stat-label">测验得分</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="studyDays">1</div>
+                    <div class="stat-label">学习天数</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 导航标签 -->
+        <div class="nav-tabs fade-in">
+            <button class="nav-tab active" onclick="showSection('vocab')">📚 单词学习</button>
+            <button class="nav-tab" onclick="showSection('quiz')">🎯 自测模式</button>
+            <button class="nav-tab" onclick="showSection('challenge')">🏆 最终挑战</button>
+        </div>
+
+        <!-- 词汇学习区域 -->
+        <div class="vocab-section active" id="vocabSection">
+            <div class="controls">
+                <button class="btn btn-primary" onclick="toggleAllChinese()">👁️ 显示/隐藏中文</button>
+                <button class="btn btn-secondary" onclick="resetLevel()">🔄 重置本关</button>
+                <button class="btn btn-warning" onclick="exportProgress()">💾 导出进度</button>
+                <button class="btn btn-danger" onclick="clearAllProgress()">🗑️ 清除所有进度</button>
+            </div>
+            <div class="section-title" id="vocabTitle">
+                ⏰ 第 1 关：Unit 1-2 日常作息
+            </div>
+            <div class="vocab-grid" id="vocabGrid"></div>
+        </div>
+
+        <!-- 自测区域 -->
+        <div class="quiz-section" id="quizSection">
+            <div class="controls">
+                <button class="btn btn-primary" onclick="startQuiz()">🎲 开始新测验</button>
+                <button class="btn btn-secondary" onclick="skipQuestion()">⏭️ 跳过</button>
+            </div>
+            <div class="section-title">🎯 词汇自测</div>
+            <div class="quiz-question" id="quizQuestion">
+                点击"开始新测验"开始答题
+            </div>
+            <div class="quiz-options" id="quizOptions"></div>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number" id="quizCurrent">0</div>
+                    <div class="stat-label">当前题号</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="quizCorrect">0</div>
+                    <div class="stat-label">正确数量</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="quizAccuracy">0%</div>
+                    <div class="stat-label">正确率</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 最终挑战区域 -->
+        <div class="challenge-section" id="challengeSection">
+            <div class="section-title">🏆 最终 Boss 挑战</div>
+            <p style="margin-bottom: 20px; color: var(--text-light);">
+                尝试翻译以下英文小短文，检验您的学习成果！
+            </p>
+            <div class="challenge-text">
+                <strong>My Day:</strong><br><br>
+                "I <span class="highlight">get up</span> at seven <span class="highlight">o'clock</span>. 
+                I <span class="highlight">wash</span> my face and <span class="highlight">brush</span> my 
+                <span class="highlight">teeth</span>. Then I have <span class="highlight">breakfast</span>. 
+                I <span class="highlight">go to school</span> at eight. I <span class="highlight">like</span> 
+                <span class="highlight">PE</span> and <span class="highlight">maths</span>. 
+                After school, I <span class="highlight">play sports</span> with my friends. 
+                I <span class="highlight">go home</span> at five. I am <span class="highlight">happy</span>!"
+            </div>
+            <textarea class="challenge-input" id="challengeInput" 
+                placeholder="在此输入您的翻译..."></textarea>
+            <button class="btn btn-primary" onclick="submitChallenge()">✅ 提交答案</button>
+            <div id="challengeFeedback" style="margin-top: 20px; padding: 20px; 
+                background: var(--bg); border-radius: 10px; display: none;"></div>
+        </div>
+    </div>
+
+    <script>
+        // 词汇数据 (已清洗 OCR 错误并按单元分组)
+        const vocabData = {
+            1: [
+                {en: "o'clock", cn: "……点钟"}, {en: "dress", cn: "穿衣；连衣裙"},
+                {en: "half", cn: "一半"}, {en: "brush", cn: "刷"},
+                {en: "past", cn: "过了 (时间)；过去的"}, {en: "tooth (teeth)", cn: "牙齿"},
+                {en: "thirty", cn: "三十"}, {en: "wash", cn: "洗"},
+                {en: "home", cn: "家"}, {en: "breakfast", cn: "早饭"},
+                {en: "school", cn: "学校"}, {en: "after", cn: "在……之后"},
+                {en: "bed", cn: "床"}, {en: "forget", cn: "忘记"},
+                {en: "time", cn: "时间"}, {en: "table", cn: "桌子"},
+                {en: "activity", cn: "活动"}, {en: "late", cn: "迟到"},
+                {en: "no", cn: "不；没有"}, {en: "quick", cn: "快的"},
+                {en: "next", cn: "紧接着"}, {en: "go", cn: "去"},
+                {en: "eight", cn: "八"}, {en: "Saturday", cn: "星期六"},
+                {en: "hurry", cn: "赶快"}, {en: "today", cn: "今天"},
+                {en: "dream", cn: "梦"}, {en: "eleven", cn: "十一"},
+                {en: "ten", cn: "十"}, {en: "twelve", cn: "十二"},
+                {en: "go home", cn: "回家"}, {en: "get up", cn: "起床"},
+                {en: "get dressed", cn: "穿衣"}, {en: "go to school", cn: "去上学"},
+                {en: "go to bed", cn: "去睡觉"}, {en: "brush my teeth", cn: "刷牙"},
+                {en: "hurry up", cn: "快点"}, {en: "wash my face", cn: "洗脸"},
+                {en: "What time is it?", cn: "现在几点了？"}, {en: "It's ...", cn: "现在……了"},
+                {en: "It's time to / for...", cn: "是该……的时候了"}, {en: "I'm late!", cn: "我迟到了！"},
+                {en: "Don't forget to ...", cn: "别忘了……"}
+            ],
+            2: [
+                {en: "plan", cn: "计划"}, {en: "twenty", cn: "二十"},
+                {en: "forty", cn: "四十"}, {en: "fifty", cn: "五十"},
+                {en: "dinner", cn: "晚饭"}, {en: "book", cn: "书"},
+                {en: "sport", cn: "运动"}, {en: "TV (=television)", cn: "电视"},
+                {en: "club", cn: "社团"}, {en: "at", cn: "在……"},
+                {en: "maybe", cn: "也许"}, {en: "think", cn: "想，认为"},
+                {en: "about", cn: "关于"}, {en: "pack", cn: "收拾"},
+                {en: "schoolbag", cn: "书包"}, {en: "hour", cn: "小时"},
+                {en: "every", cn: "每个"}, {en: "day", cn: "一天"},
+                {en: "take", cn: "乘坐；需要 (时间)"}, {en: "sleep", cn: "睡觉"},
+                {en: "find", cn: "找到"}, {en: "Sunday", cn: "星期日"},
+                {en: "child (children)", cn: "孩子"}, {en: "mother", cn: "母亲"},
+                {en: "father", cn: "父亲"}, {en: "new", cn: "新的"},
+                {en: "year", cn: "年"}, {en: "sure", cn: "当然"},
+                {en: "love", cn: "愿意，喜爱"}, {en: "join", cn: "加入"},
+                {en: "football", cn: "足球"}, {en: "just", cn: "只是；正好"},
+                {en: "thing", cn: "东西，事物"}, {en: "fun", cn: "乐趣；有趣的"},
+                {en: "ask", cn: "邀请；询问"}, {en: "her", cn: "她；她的"},
+                {en: "idea", cn: "主意"}, {en: "have dinner", cn: "吃晚饭"},
+                {en: "read books", cn: "看书"}, {en: "play sports", cn: "做运动"},
+                {en: "watch TV", cn: "看电视"}, {en: "have lunch", cn: "吃午饭"},
+                {en: "go to a school club", cn: "参加学校社团"}, {en: "pack my schoolbag", cn: "收拾书包"},
+                {en: "half an hour", cn: "半小时"}, {en: "What time do you ...?", cn: "你几点…?"},
+                {en: "Do you want to join us?", cn: "你想加入我们吗？"}, {en: "I'd love to!", cn: "我很愿意！"},
+                {en: "No, thanks!", cn: "不了，谢谢！"}, {en: "That looks like fun.", cn: "看起来真有趣"}
+            ],
+            3: [
+                {en: "lead", cn: "带领"}, {en: "run", cn: "跑"},
+                {en: "way", cn: "路线；方法"}, {en: "best", cn: "最好；最好的"},
+                {en: "carry", cn: "搬运"}, {en: "rule", cn: "规则"},
+                {en: "food", cn: "食物"}, {en: "turn", cn: "机会；转动"},
+                {en: "out", cn: "(拿) 出"}, {en: "speak", cn: "说话"},
+                {en: "give", cn: "给"}, {en: "paper", cn: "试卷；纸"},
+                {en: "lunch", cn: "午餐"}, {en: "away", cn: "离开"},
+                {en: "light", cn: "灯；轻的"}, {en: "must", cn: "必须"},
+                {en: "blackboard", cn: "黑板"}, {en: "need", cn: "需要"},
+                {en: "door", cn: "门"}, {en: "top", cn: "最高"},
+                {en: "plant", cn: "植物"}, {en: "talk", cn: "说话"},
+                {en: "Monday", cn: "星期一"}, {en: "exercise", cn: "练习；锻炼"},
+                {en: "April", cn: "四月"}, {en: "clean", cn: "干净的；打扫"},
+                {en: "he", cn: "他"}, {en: "arrive", cn: "到达"},
+                {en: "such", cn: "非常；这样的"}, {en: "should", cn: "应该"},
+                {en: "some", cn: "一些"}, {en: "tomato", cn: "西红柿"},
+                {en: "work", cn: "工作"}, {en: "so", cn: "很；所以"},
+                {en: "eat", cn: "吃"}, {en: "together", cn: "一起"},
+                {en: "stand", cn: "站立"}, {en: "line", cn: "队伍，行列"},
+                {en: "classroom rules", cn: "班规"}, {en: "don't run", cn: "不要奔跑"},
+                {en: "do your best", cn: "尽自己最大努力"}, {en: "take turns", cn: "轮流"},
+                {en: "say nice words", cn: "用语得体"}, {en: "helping hand", cn: "伸出援手"},
+                {en: "put away", cn: "收拾好"}, {en: "listen carefully", cn: "仔细听"},
+                {en: "on duty", cn: "值日"}, {en: "line leader", cn: "列队小帮手"},
+                {en: "lunch helper", cn: "午饭小帮手"}, {en: "teacher helper", cn: "老师小帮手"}
+            ],
+            4: [
+                {en: "hold", cn: "使保持；拿着"}, {en: "excuse", cn: "原谅"},
+                {en: "voice", cn: "声音"}, {en: "down", cn: "减弱；向下"},
+                {en: "or", cn: "或者"}, {en: "drink", cn: "喝"},
+                {en: "we", cn: "我们"}, {en: "polite", cn: "礼貌的"},
+                {en: "there", cn: "那里"}, {en: "sorry", cn: "对不起"},
+                {en: "toilet", cn: "厕所"}, {en: "knock", cn: "敲"},
+                {en: "off", cn: "关闭"}, {en: "water", cn: "水"},
+                {en: "block", cn: "挡住"}, {en: "PE", cn: "体育"},
+                {en: "maths", cn: "数学"}, {en: "window", cn: "窗户"},
+                {en: "fan", cn: "风扇；爱好者"}, {en: "close", cn: "关闭"},
+                {en: "piano", cn: "钢琴"}, {en: "desk", cn: "书桌"},
+                {en: "computer", cn: "电脑"}, {en: "use", cn: "使用"},
+                {en: "care", cn: "小心；照料"}, {en: "chair", cn: "椅子"},
+                {en: "classroom", cn: "教室"}, {en: "other", cn: "他人；其他的"},
+                {en: "library", cn: "图书馆"}, {en: "anyone", cn: "任何人"},
+                {en: "before", cn: "在……之前"}, {en: "place", cn: "地点"},
+                {en: "litter", cn: "乱扔；垃圾"}, {en: "road", cn: "道路"},
+                {en: "sign", cn: "标志"}, {en: "Can I join you?", cn: "我能加入你们吗？"},
+                {en: "You're up next!", cn: "下一个该你了！"}, {en: "Come and play!", cn: "来玩吧！"},
+                {en: "Can I have a turn?", cn: "我能玩一次吗？"}, {en: "You can go first.", cn: "你先来"},
+                {en: "What rules do you like?", cn: "你喜欢哪些规则？"}, {en: "I like...", cn: "我喜欢……"}
+            ]
+        };
+
+        // 状态管理
+        let currentLevel = 1;
+        let masteredWords = JSON.parse(localStorage.getItem('grade3Mastered')) || {};
+        let quizStats = JSON.parse(localStorage.getItem('grade3QuizStats')) || {score: 0, correct: 0, total: 0};
+        let currentQuiz = null;
+
+        // 初始化
+        function init() {
+            updateProgress();
+            showLevel(1);
+            loadStudyDays();
+        }
+
+        // 显示关卡
+        function showLevel(level) {
+            currentLevel = level;
+            document.querySelectorAll('.level-card').forEach(card => card.classList.remove('active'));
+            document.getElementById(`level${level}`).classList.add('active');
+            
+            const titles = {
+                1: '⏰ 第 1 关：Unit 1-2 日常作息',
+                2: '📅 第 2 关：Unit 3-4 计划与活动',
+                3: '🏫 第 3 关：Unit 5-6 规则与学校',
+                4: '🎒 第 4 关：Unit 7-8 设施与复习'
+            };
+            document.getElementById('vocabTitle').textContent = titles[level];
+            
+            renderVocabGrid(level);
+        }
+
+        // 渲染词汇网格
+        function renderVocabGrid(level) {
+            const grid = document.getElementById('vocabGrid');
+            grid.innerHTML = '';
+            const levelData = vocabData[level];
+            
+            levelData.forEach((word, index) => {
+                const card = document.createElement('div');
+                card.className = 'vocab-card fade-in';
+                if (masteredWords[`${level}-${index}`]) {
+                    card.classList.add('mastered');
+                }
+                card.onclick = () => toggleWord(card, level, index);
+                
+                card.innerHTML = `
+                    <div class="mastered-badge">✅ 已掌握</div>
+                    <div class="vocab-english">${word.en}</div>
+                    <div class="vocab-chinese">${word.cn}</div>
+                `;
+                grid.appendChild(card);
+            });
+            
+            // 更新本关计数显示
+            const masteredCount = Object.keys(masteredWords).filter(k => k.startsWith(`${level}-`)).length;
+            document.getElementById(`level${level}Count`).textContent = `${masteredCount}/${levelData.length}`;
+        }
+
+        // 切换单词显示
+        function toggleWord(card, level, index) {
+            card.classList.toggle('show-chinese');
+            const key = `${level}-${index}`;
+            if (!masteredWords[key]) {
+                masteredWords[key] = true;
+                card.classList.add('mastered');
+                saveProgress();
+                updateProgress();
+                // 更新本关计数
+                const masteredCount = Object.keys(masteredWords).filter(k => k.startsWith(`${level}-`)).length;
+                document.getElementById(`level${level}Count`).textContent = `${masteredCount}/${vocabData[level].length}`;
+            }
+        }
+
+        // 切换所有中文显示
+        function toggleAllChinese() {
+            document.querySelectorAll('.vocab-card').forEach(card => {
+                card.classList.toggle('show-chinese');
+            });
+        }
+
+        // 更新进度
+        function updateProgress() {
+            let total = 0;
+            let mastered = 0;
+            
+            for (let level = 1; level <= 4; level++) {
+                const levelTotal = vocabData[level].length;
+                const levelMastered = Object.keys(masteredWords).filter(k => k.startsWith(`${level}-`)).length;
+                total += levelTotal;
+                mastered += levelMastered;
+                // 实时更新卡片上的计数
+                document.getElementById(`level${level}Count`).textContent = `${levelMastered}/${levelTotal}`;
+            }
+            
+            const percentage = total === 0 ? 0 : Math.round((mastered / total) * 100);
+            document.getElementById('totalProgress').textContent = `${percentage}%`;
+            document.getElementById('totalProgress').style.width = `${percentage}%`;
+            document.getElementById('masteredCount').textContent = mastered;
+            document.getElementById('quizScore').textContent = quizStats.score;
+        }
+
+        // 保存进度
+        function saveProgress() {
+            localStorage.setItem('grade3Mastered', JSON.stringify(masteredWords));
+        }
+
+        // 重置关卡
+        function resetLevel() {
+            if (confirm('确定要重置本关进度吗？')) {
+                for (let i = 0; i < vocabData[currentLevel].length; i++) {
+                    delete masteredWords[`${currentLevel}-${i}`];
+                }
+                saveProgress();
+                renderVocabGrid(currentLevel);
+                updateProgress();
+            }
+        }
+
+        // 清除所有进度
+        function clearAllProgress() {
+            if (confirm('确定要清除所有学习进度吗？此操作不可恢复！')) {
+                masteredWords = {};
+                quizStats = {score: 0, correct: 0, total: 0};
+                localStorage.removeItem('grade3Mastered');
+                localStorage.removeItem('grade3QuizStats');
+                saveProgress();
+                updateProgress();
+                renderVocabGrid(currentLevel);
+            }
+        }
+
+        // 导出进度
+        function exportProgress() {
+            const data = {
+                masteredWords,
+                quizStats,
+                exportDate: new Date().toISOString()
+            };
+            const blob = new Blob([JSON.stringify(data, null, 2)], {type: 'application/json'});
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `三下英语学习进度_${new Date().toLocaleDateString()}.json`;
+            a.click();
+        }
+
+        // 显示不同区域
+        function showSection(section) {
+            document.querySelectorAll('.nav-tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.vocab-section, .quiz-section, .challenge-section').forEach(s => s.classList.remove('active'));
+            
+            event.target.classList.add('active');
+            document.getElementById(`${section}Section`).classList.add('active');
+            
+            if (section === 'quiz') {
+                startQuiz();
+            }
+        }
+
+        // 开始测验
+        function startQuiz() {
+            const allWords = [];
+            for (let level = 1; level <= 4; level++) {
+                vocabData[level].forEach((word, index) => {
+                    allWords.push({...word, level, index});
+                });
+            }
+            
+            // 随机选择 10 个词
+            currentQuiz = {
+                words: allWords.sort(() => Math.random() - 0.5).slice(0, 10),
+                current: 0,
+                correct: 0
+            };
+            
+            document.getElementById('quizCurrent').textContent = '0';
+            document.getElementById('quizCorrect').textContent = '0';
+            document.getElementById('quizAccuracy').textContent = '0%';
+            
+            showQuizQuestion();
+        }
+
+        // 显示测验问题
+        function showQuizQuestion() {
+            if (currentQuiz.current >= currentQuiz.words.length) {
+                endQuiz();
+                return;
+            }
+            
+            const word = currentQuiz.words[currentQuiz.current];
+            document.getElementById('quizCurrent').textContent = currentQuiz.current + 1;
+            document.getElementById('quizQuestion').textContent = word.en;
+            
+            // 生成选项
+            const allWords = [];
+            for (let level = 1; level <= 4; level++) {
+                vocabData[level].forEach(w => allWords.push(w.cn));
+            }
+            
+            const options = [word.cn];
+            while (options.length < 4) {
+                const random = allWords[Math.floor(Math.random() * allWords.length)];
+                if (!options.includes(random)) {
+                    options.push(random);
+                }
+            }
+            options.sort(() => Math.random() - 0.5);
+            
+            const optionsDiv = document.getElementById('quizOptions');
+            optionsDiv.innerHTML = '';
+            
+            options.forEach(opt => {
+                const div = document.createElement('div');
+                div.className = 'quiz-option';
+                div.textContent = opt;
+                div.onclick = () => checkAnswer(div, opt, word.cn);
+                optionsDiv.appendChild(div);
+            });
+        }
+
+        // 检查答案
+        function checkAnswer(element, selected, correct) {
+            const options = document.querySelectorAll('.quiz-option');
+            options.forEach(opt => opt.style.pointerEvents = 'none');
+            
+            if (selected === correct) {
+                element.classList.add('correct');
+                currentQuiz.correct++;
+                quizStats.correct++;
+                quizStats.score += 10;
+            } else {
+                element.classList.add('wrong');
+                options.forEach(opt => {
+                    if (opt.textContent === correct) {
+                        opt.classList.add('correct');
+                    }
+                });
+            }
+            
+            quizStats.total++;
+            document.getElementById('quizCorrect').textContent = currentQuiz.correct;
+            document.getElementById('quizScore').textContent = quizStats.score;
+            
+            const accuracy = Math.round((quizStats.correct / quizStats.total) * 100);
+            document.getElementById('quizAccuracy').textContent = `${accuracy}%`;
+            
+            localStorage.setItem('grade3QuizStats', JSON.stringify(quizStats));
+            
+            setTimeout(() => {
+                currentQuiz.current++;
+                showQuizQuestion();
+            }, 1500);
+        }
+
+        // 跳过问题
+        function skipQuestion() {
+            if (currentQuiz) {
+                currentQuiz.current++;
+                showQuizQuestion();
+            }
+        }
+
+        // 结束测验
+        function endQuiz() {
+            const accuracy = currentQuiz.words.length === 0 ? 0 : Math.round((currentQuiz.correct / currentQuiz.words.length) * 100);
+            document.getElementById('quizQuestion').innerHTML = `
+                🎉 测验完成！<br>
+                正确率：${accuracy}%<br>
+                得分：${currentQuiz.correct * 10} 分
+            `;
+            document.getElementById('quizOptions').innerHTML = '';
+        }
+
+        // 提交挑战
+        function submitChallenge() {
+            const input = document.getElementById('challengeInput').value;
+            const feedback = document.getElementById('challengeFeedback');
+            
+            if (input.length < 10) {
+                feedback.style.display = 'block';
+                feedback.innerHTML = '⚠️ 请至少输入 10 个字符的翻译内容';
+                feedback.style.background = '#fee2e2';
+                return;
+            }
+            
+            feedback.style.display = 'block';
+            feedback.innerHTML = `
+                <strong>✅ 提交成功！真棒！</strong><br><br>
+                <strong>参考译文：</strong><br>
+                "我七<strong>点钟</strong>起床。我洗脸<strong>刷</strong>牙。然后我吃<strong>早饭</strong>。
+                我八点钟<strong>去上学</strong>。我<strong>喜欢</strong><strong>体育</strong>和<strong>数学</strong>。
+                放学后，我和朋友<strong>做运动</strong>。我五点钟<strong>回家</strong>。我很<strong>快乐</strong>！"<br><br>
+                <strong>💡 提示：</strong>加粗词汇为本课程核心单词，请确保理解准确！
+            `;
+            feedback.style.background = '#d1fae5';
+        }
+
+        // 加载学习天数
+        function loadStudyDays() {
+            const firstVisit = localStorage.getItem('grade3FirstVisit');
+            if (!firstVisit) {
+                localStorage.setItem('grade3FirstVisit', new Date().toISOString());
+            } else {
+                const first = new Date(firstVisit);
+                const now = new Date();
+                const days = Math.ceil((now - first) / (1000 * 60 * 60 * 24));
+                document.getElementById('studyDays').textContent = days;
+            }
+        }
+
+        // 页面加载时初始化
+        window.onload = init;
+    </script>
+</body>
+</html>
