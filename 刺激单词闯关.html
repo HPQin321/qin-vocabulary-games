@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🚀 银河单词跑酷：火箭大逃亡</title>
+    <style>
+        :root {
+            --neon-blue: #00f3ff;
+            --neon-pink: #ff00ff;
+            --neon-green: #00ff41;
+            --danger: #ff3131;
+            --space-bg: #0b0d17;
+        }
+        body {
+            font-family: 'Verdana', sans-serif;
+            background-color: var(--space-bg);
+            color: white;
+            margin: 0;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100vh;
+            user-select: none;
+        }
+        /* 星空背景动画 */
+        .stars {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: #000;
+            z-index: -1;
+            overflow: hidden;
+        }
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            animation: move 2s infinite linear;
+        }
+        @keyframes move {
+            from { transform: translateY(-10vh); opacity: 0; }
+            to { transform: translateY(110vh); opacity: 1; }
+        }
+
+        /* UI 层 */
+        #ui-layer {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 20px;
+            box-sizing: border-box;
+            z-index: 10;
+        }
+        .hud-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(0,0,0,0.7);
+            padding: 10px 20px;
+            border: 2px solid var(--neon-blue);
+            border-radius: 15px;
+            pointer-events: auto;
+        }
+        .fuel-container {
+            width: 200px;
+            height: 20px;
+            background: #333;
+            border: 2px solid white;
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+        }
+        .fuel-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--danger), var(--neon-green));
+            width: 100%;
+            transition: width 0.2s;
+        }
+        .fuel-text {
+            position: absolute;
+            width: 100%;
+            text-align: center;
+            top: 0;
+            line-height: 20px;
+            font-size: 12px;
+            color: white;
+            text-shadow: 1px 1px 2px black;
+        }
+
+        /* 游戏主区域 */
+        #game-area {
+            position: relative;
+            width: 90%;
+            max-width: 600px;
+            height: 60vh;
+            background: rgba(0,0,0,0.5);
+            border: 2px solid var(--neon-pink);
+            border-radius: 20px;
+            margin-top: 80px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            pointer-events: auto;
+            box-shadow: 0 0 20px var(--neon-pink);
+        }
+        
+        .word-card {
+            text-align: center;
+            z-index: 5;
+            background: rgba(0,0,0,0.8);
+            padding: 20px;
+            border-radius: 15px;
+            border: 1px solid var(--neon-blue);
+        }
+        .word-en { font-size: 3rem; font-weight: bold; color: var(--neon-blue); text-shadow: 0 0 10px var(--neon-blue); }
+        .word-cn { font-size: 1.5rem; color: #ddd; margin: 10px 0; }
+        
+        canvas {
+            background: rgba(255,255,255,0.1);
+            border: 2px dashed var(--neon-green);
+            border-radius: 10px;
+            cursor: crosshair;
+            touch-action: none;
+            margin: 10px 0;
+        }
+
+        .controls {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .btn {
+            background: var(--neon-blue);
+            color: black;
+            border: none;
+            padding: 10px 20px;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 5px;
+            cursor: pointer;
+            box-shadow: 0 0 10px var(--neon-blue);
+            transition: transform 0.1s;
+        }
+        .btn:active { transform: scale(0.95); }
+        .btn-danger { background: var(--danger); color: white; box-shadow: 0 0 10px var(--danger); }
+        .btn-launch { background: var(--neon-green); color: black; box-shadow: 0 0 15px var(--neon-green); font-size: 1.2rem; }
+
+        .input-box {
+            background: transparent;
+            border: none;
+            border-bottom: 2px solid var(--neon-green);
+            color: white;
+            font-size: 2rem;
+            text-align: center;
+            width: 80%;
+            outline: none;
+            text-transform: lowercase;
+            font-family: 'Courier New', monospace;
+        }
+
+        /* 弹窗 */
+        .modal {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.9);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            pointer-events: auto;
+        }
+        .hidden { display: none; }
+        .unit-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            max-width: 600px;
+        }
+        .unit-card {
+            background: #222;
+            border: 2px solid var(--neon-blue);
+            padding: 20px;
+            text-align: center;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .unit-card:hover { background: var(--neon-blue); color: black; transform: scale(1.05); }
+        .unit-card.review { border-color: var(--danger); color: var(--danger); animation: pulse 1s infinite; }
+
+        @keyframes pulse { 0% { box-shadow: 0 0 5px var(--danger); } 50% { box-shadow: 0 0 20px var(--danger); } 100% { box-shadow: 0 0 5px var(--danger); } }
+        @keyframes shake { 0% { transform: translate(0,0); } 25% { transform: translate(-5px,0); } 75% { transform: translate(5px,0); } 100% { transform: translate(0,0); } }
+        .shake { animation: shake 0.3s; }
+
+        /* 火箭 */
+        #rocket {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 4rem;
+            transition: bottom 0.5s, transform 0.1s;
+            filter: drop-shadow(0 0 10px var(--neon-green));
+            z-index: 2;
+        }
+        .fire {
+            position: absolute;
+            bottom: -20px; left: 50%; transform: translateX(-50%);
+            width: 20px; height: 40px;
+            background: linear-gradient(to bottom, yellow, red, transparent);
+            border-radius: 50%;
+            animation: burn 0.1s infinite;
+            display: none;
+        }
+        @keyframes burn { 0% { height: 40px; opacity: 1; } 100% { height: 60px; opacity: 0.5; } }
+
+    </style>
+</head>
+<body>
+
+    <!-- 背景星空 -->
+    <div class="stars" id="star-field"></div>
+
+    <!-- 火箭 -->
+    <div id="rocket">🚀<div class="fire" id="rocket-fire"></div></div>
+
+    <!-- UI 层 -->
+    <div id="ui-layer">
+        <div class="hud-top">
+            <div>MISSION: <span id="mission-name" style="color:var(--neon-pink)">SELECT UNIT</span></div>
+            <div class="fuel-container">
+                <div class="fuel-bar" id="fuel-bar"></div>
+                <div class="fuel-text">FUEL</div>
+            </div>
+            <div>SCORE: <span id="score-val" style="color:var(--neon-green)">0</span></div>
+        </div>
+        
+        <div id="game-area">
+            <div class="word-card" id="word-card">
+                <div class="word-en" id="disp-en">READY?</div>
+                <div class="word-cn" id="disp-cn">选择任务开始</div>
+                <button class="btn" onclick="playSound('voice')" style="margin:5px;">🔊 听读音</button>
+                
+                <canvas id="draw-canvas" width="300" height="150"></canvas>
+                
+                <input type="text" class="input-box hidden" id="spell-input" placeholder="TYPE WORD HERE" autocomplete="off">
+                
+                <div class="controls">
+                    <button class="btn btn-danger" onclick="clearCanvas()">🗑️ 擦除</button>
+                    <button class="btn btn-launch" id="action-btn" onclick="handleAction()">🎨 涂鸦充能</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 主菜单 -->
+    <div id="main-menu" class="modal">
+        <h1 style="color:var(--neon-blue); text-shadow: 0 0 20px var(--neon-blue); font-size: 3rem;">🚀 银河单词跑酷</h1>
+        <p>燃料有限！快速涂鸦并拼写单词以补充燃料！</p>
+        <div class="unit-grid" id="unit-grid"></div>
+        <div style="margin-top: 20px; color: #aaa;">复习任务：<span id="review-count" style="color:var(--danger)">0</span> 个危险小行星</div>
+    </div>
+
+    <!-- 游戏结束 -->
+    <div id="game-over" class="modal hidden">
+        <h1 style="color:var(--danger); font-size: 4rem;">MISSION FAILED</h1>
+        <p>燃料耗尽！火箭坠毁！</p>
+        <button class="btn btn-launch" onclick="location.reload()">🔄 重试任务</button>
+    </div>
+
+    <!-- 关卡完成 -->
+    <div id="level-complete" class="modal hidden">
+        <h1 style="color:var(--neon-green); font-size: 4rem;">MISSION COMPLETE!</h1>
+        <p>单元完成！进入超空间...</p>
+        <button class="btn btn-launch" onclick="showMenu()">🗺️ 返回基地</button>
+    </div>
+
+<script>
+    // ================= 数据配置 (已清洗) =================
+    const vocabDB = {
+        "Unit 1": [
+            { w: "o'clock", c: "……点钟" }, { w: "dress", c: "穿衣" }, { w: "breakfast", c: "早饭" },
+            { w: "school", c: "学校" }, { w: "bed", c: "床" }, { w: "time", c: "时间" },
+            { w: "late", c: "迟到" }, { w: "hurry", c: "赶快" }, { w: "wash", c: "洗" },
+            { w: "brush", c: "刷" }, { w: "teeth", c: "牙齿" }
+        ],
+        "Unit 2": [
+            { w: "ten", c: "十" }, { w: "twelve", c: "十二" }, { w: "twenty", c: "二十" },
+            { w: "thirty", c: "三十" }, { w: "forty", c: "四十" }, { w: "fifty", c: "五十" }
+        ],
+        "Unit 3": [
+            { w: "plan", c: "计划" }, { w: "dinner", c: "晚饭" }, { w: "sport", c: "运动" },
+            { w: "TV", c: "电视" }, { w: "schoolbag", c: "书包" }, { w: "sleep", c: "睡觉" },
+            { w: "hour", c: "小时" }, { w: "pack", c: "收拾" }
+        ],
+        "Unit 4": [
+            { w: "join", c: "加入" }, { w: "football", c: "足球" }, { w: "fun", c: "乐趣" },
+            { w: "sure", c: "当然" }, { w: "love", c: "喜爱" }, { w: "idea", c: "主意" }
+        ],
+        "Unit 5": [
+            { w: "rule", c: "规则" }, { w: "must", c: "必须" }, { w: "blackboard", c: "黑板" },
+            { w: "clean", c: "打扫" }, { w: "should", c: "应该" }, { w: "arrive", c: "到达" }
+        ],
+        "Unit 6": [
+            { w: "eat", c: "吃" }, { w: "run", c: "跑" }, { w: "stand", c: "站立" },
+            { w: "line", c: "队伍" }, { w: "lead", c: "带领" }, { w: "carry", c: "搬运" }
+        ],
+        "Unit 7": [
+            { w: "polite", c: "礼貌" }, { w: "sorry", c: "对不起" }, { w: "toilet", c: "厕所" },
+            { w: "water", c: "水" }, { w: "knock", c: "敲" }, { w: "voice", c: "声音" }
+        ],
+        "Unit 8": [
+            { w: "window", c: "窗户" }, { w: "computer", c: "电脑" }, { w: "library", c: "图书馆" },
+            { w: "classroom", c: "教室" }, { w: "chair", c: "椅子" }, { w: "fan", c: "风扇" }
+        ],
+        "Review": [
+            { w: "road", c: "道路" }, { w: "sign", c: "标志" }, { w: "litter", c: "垃圾" },
+            { w: "safe", c: "安全" }, { w: "light", c: "灯" }
+        ]
+    };
+
+    // 记忆曲线配置 (分钟)
+    const intervals = [0, 5, 30, 720, 1440, 2880, 5760, 10080]; 
+    const STORAGE_KEY = "rocket_word_v2";
+
+    // ================= 游戏状态 =================
+    let state = {
+        unit: null,
+        queue: [],
+        currentIndex: 0,
+        fuel: 100,
+        score: 0,
+        isPlaying: false,
+        mode: 'draw', // 'draw' or 'spell'
+        timer: null
+    };
+
+    // ================= 初始化 =================
+    window.onload = function() {
+        initStars();
+        initMenu();
+        initCanvas();
+        loadProgress();
+    };
+
+    function initStars() {
+        const container = document.getElementById('star-field');
+        for(let i=0; i<50; i++) {
+            const star = document.createElement('div');
+            star.className = 'star';
+            star.style.left = Math.random() * 100 + '%';
+            star.style.width = Math.random() * 3 + 'px';
+            star.style.height = star.style.width;
+            star.style.animationDuration = (Math.random() * 2 + 1) + 's';
+            star.style.animationDelay = Math.random() * 2 + 's';
+            container.appendChild(star);
+        }
+    }
+
+    function initMenu() {
+        const grid = document.getElementById('unit-grid');
+        const units = Object.keys(vocabDB);
+        let reviewCount = 0;
+
+        // 检查复习
+        const data = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+        for(let key in data) {
+            if(key !== 'score' && data[key].nextReview <= Date.now()) reviewCount++;
+        }
+        document.getElementById('review-count').innerText = reviewCount;
+
+        // 复习按钮
+        const revBtn = document.createElement('div');
+        revBtn.className = 'unit-card review';
+        revBtn.innerHTML = "🚨 紧急复习<br><small>危险小行星</small>";
+        revBtn.onclick = () => startGame('ReviewQueue');
+        grid.appendChild(revBtn);
+
+        // 单元按钮
+        units.forEach(unit => {
+            const card = document.createElement('div');
+            card.className = 'unit-card';
+            card.innerHTML = `${unit}<br><small>${vocabDB[unit].length} 词</small>`;
+            card.onclick = () => startGame(unit);
+            grid.appendChild(card);
+        });
+    }
+
+    function loadProgress() {
+        const data = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+        state.score = data.score || 0;
+        document.getElementById('score-val').innerText = state.score;
+    }
+
+    function saveProgress(wordObj, unit, correct) {
+        const key = `${unit}::${wordObj.w}`;
+        const data = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+        let record = data[key] || { stage: 0, nextReview: 0 };
+
+        if(correct) {
+            if(record.stage < intervals.length - 1) record.stage++;
+            state.score += 10;
+            playSound('win');
+        } else {
+            record.stage = 0;
+            playSound('fail');
+        }
+
+        const minutes = intervals[record.stage];
+        record.nextReview = Date.now() + (minutes * 60 * 1000);
+        data[key] = record;
+        data.score = state.score;
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+        document.getElementById('score-val').innerText = state.score;
+    }
+
+    // ================= 游戏逻辑 =================
+    function startGame(unitMode) {
+        document.getElementById('main-menu').classList.add('hidden');
+        document.getElementById('game-over').classList.add('hidden');
+        document.getElementById('level-complete').classList.add('hidden');
+        
+        state.fuel = 100;
+        state.isPlaying = true;
+        state.currentIndex = 0;
+        document.getElementById('mission-name').innerText = unitMode === 'ReviewQueue' ? "🚨 紧急复习" : unitMode;
+        updateFuelUI();
+
+        // 构建队列
+        if(unitMode === 'ReviewQueue') {
+            const data = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+            state.queue = [];
+            for(let key in data) {
+                if(key !== 'score' && data[key].nextReview <= Date.now()) {
+                    const [u, w] = key.split('::');
+                    if(vocabDB[u]) {
+                        const wordObj = vocabDB[u].find(i => i.w === w);
+                        if(wordObj) state.queue.push({ ...wordObj, unit: u });
+                    }
+                }
+            }
+            if(state.queue.length === 0) {
+                alert("暂无复习任务！");
+                showMenu();
+                return;
+            }
+        } else {
+            state.unit = unitMode;
+            state.queue = vocabDB[unitMode].map(w => ({ ...w, unit: unitMode }));
+        }
+
+        // 启动燃料消耗
+        if(state.timer) clearInterval(state.timer);
+        state.timer = setInterval(() => {
+            if(!state.isPlaying) return;
+            state.fuel -= 0.5; // 燃料消耗速度
+            if(state.fuel <= 0) {
+                state.fuel = 0;
+                gameOver();
+            }
+            updateFuelUI();
+        }, 100);
+
+        loadWord();
+    }
+
+    function loadWord() {
+        if(state.currentIndex >= state.queue.length) {
+            levelComplete();
+            return;
+        }
+
+        const wordObj = state.queue[state.currentIndex];
+        document.getElementById('disp-en').innerText = wordObj.w;
+        document.getElementById('disp-cn').innerText = wordObj.c;
+        
+        // 重置界面
+        state.mode = 'draw';
+        document.getElementById('spell-input').classList.add('hidden');
+        document.getElementById('draw-canvas').style.display = 'block';
+        document.getElementById('action-btn').innerText = "🎨 涂鸦充能";
+        document.getElementById('action-btn').className = "btn btn-launch";
+        document.getElementById('action-btn').onclick = handleAction;
+        
+        clearCanvas();
+        playSound('voice');
+        setTimeout(() => playAudio(wordObj.w), 500);
+    }
+
+    function handleAction() {
+        if(state.mode === 'draw') {
+            // 切换到拼写
+            state.mode = 'spell';
+            document.getElementById('draw-canvas').style.display = 'none';
+            document.getElementById('spell-input').classList.remove('hidden');
+            document.getElementById('spell-input').value = '';
+            document.getElementById('spell-input').focus();
+            document.getElementById('action-btn').innerText = "🚀 发射拼写";
+            document.getElementById('action-btn').className = "btn btn-danger";
+        } else {
+            // 提交拼写
+            checkSpell();
+        }
+    }
+
+    // 支持回车提交
+    document.getElementById('spell-input').addEventListener('keypress', function (e) {
+        if (e.key === 'Enter') checkSpell();
+    });
+
+    function checkSpell() {
+        const input = document.getElementById('spell-input');
+        const currentWord = state.queue[state.currentIndex];
+        
+        if(input.value.trim().toLowerCase() === currentWord.w.toLowerCase()) {
+            // 正确
+            state.fuel = Math.min(100, state.fuel + 20); // 奖励燃料
+            saveProgress(currentWord, currentWord.unit, true);
+            triggerLaunch();
+        } else {
+            // 错误
+            state.fuel -= 10; // 惩罚
+            saveProgress(currentWord, currentWord.unit, false);
+            document.getElementById('game-area').classList.add('shake');
+            setTimeout(() => document.getElementById('game-area').classList.remove('shake'), 500);
+            input.value = '';
+            input.focus();
+            playSound('alarm');
+        }
+        updateFuelUI();
+    }
+
+    function triggerLaunch() {
+        const rocket = document.getElementById('rocket');
+        const fire = document.getElementById('rocket-fire');
+        
+        // 动画
+        fire.style.display = 'block';
+        rocket.style.bottom = "100vh"; // 飞出去
+        playSound('launch');
+        
+        // 加速背景
+        document.querySelectorAll('.star').forEach(s => s.style.animationDuration = '0.2s');
+
+        setTimeout(() => {
+            state.currentIndex++;
+            rocket.style.bottom = "20px";
+            fire.style.display = 'none';
+            document.querySelectorAll('.star').forEach(s => s.style.animationDuration = (Math.random() * 2 + 1) + 's');
+            loadWord();
+        }, 1000);
+    }
+
+    function updateFuelUI() {
+        const bar = document.getElementById('fuel-bar');
+        bar.style.width = state.fuel + '%';
+        if(state.fuel < 30) {
+            bar.style.background = 'var(--danger)';
+            playSound('alarm');
+        } else {
+            bar.style.background = 'linear-gradient(90deg, var(--danger), var(--neon-green))';
+        }
+    }
+
+    function gameOver() {
+        state.isPlaying = false;
+        clearInterval(state.timer);
+        document.getElementById('game-over').classList.remove('hidden');
+        playSound('crash');
+    }
+
+    function levelComplete() {
+        state.isPlaying = false;
+        clearInterval(state.timer);
+        document.getElementById('level-complete').classList.remove('hidden');
+        playSound('win');
+    }
+
+    function showMenu() {
+        location.reload();
+    }
+
+    // ================= 画布逻辑 =================
+    let canvas, ctx, drawing = false;
+    function initCanvas() {
+        canvas = document.getElementById('draw-canvas');
+        ctx = canvas.getContext('2d');
+        ctx.lineWidth = 4;
+        ctx.lineCap = 'round';
+        ctx.strokeStyle = '#00ff41';
+
+        const start = (e) => { drawing = true; ctx.beginPath(); const pos = getPos(e); ctx.moveTo(pos.x, pos.y); };
+        const move = (e) => { if(!drawing) return; const pos = getPos(e); ctx.lineTo(pos.x, pos.y); ctx.stroke(); };
+        const end = () => { drawing = false; };
+
+        canvas.addEventListener('mousedown', start);
+        canvas.addEventListener('mousemove', move);
+        canvas.addEventListener('mouseup', end);
+        canvas.addEventListener('touchstart', (e) => { e.preventDefault(); const touch = e.touches[0]; const mouseEvent = new MouseEvent("mousedown", { clientX: touch.clientX, clientY: touch.clientY }); canvas.dispatchEvent(mouseEvent); }, {passive: false});
+        canvas.addEventListener('touchmove', (e) => { e.preventDefault(); const touch = e.touches[0]; const mouseEvent = new MouseEvent("mousemove", { clientX: touch.clientX, clientY: touch.clientY }); canvas.dispatchEvent(mouseEvent); }, {passive: false});
+        canvas.addEventListener('touchend', end);
+    }
+    function getPos(e) { const rect = canvas.getBoundingClientRect(); return { x: e.clientX - rect.left, y: e.clientY - rect.top }; }
+    function clearCanvas() { if(ctx) ctx.clearRect(0, 0, canvas.width, canvas.height); }
+
+    // ================= 音效系统 (Web Audio API) =================
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    function playSound(type) {
+        if(audioCtx.state === 'suspended') audioCtx.resume();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        const now = audioCtx.currentTime;
+
+        if(type === 'win') {
+            osc.type = 'square';
+            osc.frequency.setValueAtTime(400, now);
+            osc.frequency.exponentialRampToValueAtTime(800, now + 0.1);
+            gain.gain.setValueAtTime(0.1, now);
+            gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+            osc.start(now); osc.stop(now + 0.3);
+        } else if(type === 'fail') {
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(200, now);
+            osc.frequency.linearRampToValueAtTime(100, now + 0.2);
+            gain.gain.setValueAtTime(0.1, now);
+            gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+            osc.start(now); osc.stop(now + 0.3);
+        } else if(type === 'launch') {
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(100, now);
+            osc.frequency.exponentialRampToValueAtTime(600, now + 0.5);
+            gain.gain.setValueAtTime(0.2, now);
+            gain.gain.linearRampToValueAtTime(0, now + 0.5);
+            osc.start(now); osc.stop(now + 0.5);
+        } else if(type === 'alarm') {
+            osc.type = 'square';
+            osc.frequency.setValueAtTime(800, now);
+            gain.gain.setValueAtTime(0.05, now);
+            gain.gain.exponentialRampToValueAtTime(0.01, now + 0.1);
+            osc.start(now); osc.stop(now + 0.1);
+        } else if(type === 'crash') {
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(100, now);
+            osc.frequency.exponentialRampToValueAtTime(10, now + 1);
+            gain.gain.setValueAtTime(0.3, now);
+            gain.gain.linearRampToValueAtTime(0, now + 1);
+            osc.start(now); osc.stop(now + 1);
+        }
+    }
+
+    function playAudio(text) {
+        const u = new SpeechSynthesisUtterance(text);
+        u.lang = 'en-US';
+        u.rate = 0.8;
+        window.speechSynthesis.speak(u);
+    }
+</script>
+</body>
+</html>
